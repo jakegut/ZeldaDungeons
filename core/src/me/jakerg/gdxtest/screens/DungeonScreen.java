@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
 import me.jakerg.gdxtest.DungeonGame;
+import me.jakerg.gdxtest.creature.Player;
 
 public class DungeonScreen implements Screen {
 	static float SPEED = 120;
@@ -14,6 +15,7 @@ public class DungeonScreen implements Screen {
 	float x, y;
 	
 	DungeonGame game;
+	Player player;
 	
 	public DungeonScreen(DungeonGame game) {
 		this.game = game;
@@ -22,27 +24,23 @@ public class DungeonScreen implements Screen {
 	@Override
 	public void show() {
 		img = new Texture(Gdx.files.internal("badlogic.jpg"));
+		player = new Player();
 	}
 
 	@Override
-	public void render(float delta) {
-		if(Gdx.input.isKeyPressed(Keys.UP))
-			y += SPEED * delta;
-		
-		if(Gdx.input.isKeyPressed(Keys.DOWN))
-			y += -SPEED * delta;
-		
-		if(Gdx.input.isKeyPressed(Keys.RIGHT))
-			x += SPEED * delta;
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT))
-			x += -SPEED * delta;
+	public void render(float delta) {		
+		update(delta);
 		
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-		game.batch.draw(img, x, y);
+		player.draw(game.batch);
 		game.batch.end();
+		
+	}
+
+	private void update(float delta) {
+		player.update(delta);
 		
 	}
 
