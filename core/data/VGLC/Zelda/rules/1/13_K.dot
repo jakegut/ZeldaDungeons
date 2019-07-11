@@ -1,0 +1,5 @@
+graph {
+xnPL [label="k, GS"]
+lWIy [label="S"]
+xnPL -- lWIy
+}

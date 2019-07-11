@@ -1,0 +1,11 @@
+graph {
+DjOu [label="s, GS"]
+FazN [label="e, GE"]
+LNmJ [label="sl"]
+XuuV [label="e"]
+AxMZ [label="e"]
+DjOu -- LNmJ
+DjOu -- XuuV
+LNmJ -- FazN
+LNmJ -- AxMZ
+}

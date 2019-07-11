@@ -1,0 +1,7 @@
+graph {
+LcBv [label="e, GS"]
+yfrK [label="k, GE"]
+KRcx [label="e"]
+LcBv -- KRcx
+KRcx -- yfrK
+}

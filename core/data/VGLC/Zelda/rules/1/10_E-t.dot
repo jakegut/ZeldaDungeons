@@ -1,0 +1,7 @@
+graph {
+qVhv [label="e, GS"]
+WqFC [label="t, GE"]
+SONF [label="e"]
+qVhv -- SONF
+SONF -- WqFC
+}

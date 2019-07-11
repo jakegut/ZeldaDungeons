@@ -1,0 +1,11 @@
+graph {
+BFhU [label="s, GS"]
+COJF [label="k, GE"]
+CguF [label="e"]
+ZKBk [label="e"]
+JCYi [label="e"]
+BFhU -- CguF
+BFhU -- ZKBk
+BFhU -- JCYi
+JCYi -- COJF
+}

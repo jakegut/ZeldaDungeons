@@ -1,0 +1,6 @@
+graph {
+EIQm [label="e, GS"]
+qQeh [label="t, GE"]
+aKBt [label="S"]
+EIQm -- aKBt
+}
