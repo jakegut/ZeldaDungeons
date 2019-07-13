@@ -1,6 +1,7 @@
 package me.jakerg.rougelike;
 
 import java.awt.Point;
+import com.badlogic.gdx.Input.Keys;
 
 /**
  * Enumerator to keep track of the latest direction of the player
@@ -8,21 +9,27 @@ import java.awt.Point;
  *
  */
 public enum Move {
-	UP("UP", new Point(0, -1)), 
-	DOWN("DOWN", new Point(0, 1)), 
-	LEFT("LEFT", new Point(-1, 0)), 
-	RIGHT("RIGHT", new Point(1, 0)),
-	NONE("NONE", new Point(0, 0));
+	UP("UP", new Point(0, -1), Keys.W), 
+	DOWN("DOWN", new Point(0, 1), Keys.S), 
+	LEFT("LEFT", new Point(-1, 0), Keys.A), 
+	RIGHT("RIGHT", new Point(1, 0), Keys.D),
+	NONE("NONE", new Point(0, 0), Keys.UNKNOWN);
 	
 	private String direction;
 	public String direction() { return this.direction; };
 	
 	private Point point;
 	public Point point() { return point; }
+	public int x() { return point.x; }
+	public int y() { return -point.y; }
 	
-	Move (String direction, Point p) {
+	private int key;
+	public int key() { return key; }
+	
+	Move (String direction, Point p, int key) {
 		this.direction = direction;
 		this.point = p;
+		this.key = key;
 	}
 	
 	public static Move getByString(String s) {
@@ -54,6 +61,14 @@ public enum Move {
 		else if(this == RIGHT)
 			return LEFT;
 		
+		return null;
+	}
+	
+	public static Move getByKey(int key) {
+		for (Move m : Move.values()){
+			if(key == m.key)
+				return m;
+		}
 		return null;
 	}
 }
