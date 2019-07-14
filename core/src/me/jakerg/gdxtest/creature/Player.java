@@ -3,6 +3,7 @@ package me.jakerg.gdxtest.creature;
 import java.util.HashMap;
 import java.util.Stack;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -32,6 +33,7 @@ public class Player extends Sprite implements InputProcessor{
 	public Animation<TextureRegion> runningAnimation;
 	public HashMap<Move, Animation<TextureRegion>> animations;
 	public HashMap<Move, Animation<TextureRegion>> attackRegions;
+	public Sprite sword;
 	private float elapsedTime;
 	
 	public Player(DungeonScreen screen) {
@@ -40,6 +42,13 @@ public class Player extends Sprite implements InputProcessor{
 		this.setPosition(0, 0);
 		this.setScale(4);
 		this.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		sword = new Sprite(screen.atlas.findRegion("swordattack"));
+		sword.setOriginCenter();
+		sword.setScale(4);
+		sword.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		sword.setAlpha(0);
+		
 		inputStack = new Stack<>();
 		inputStack.push(Move.NONE);
 		lastMove = Move.UP;
@@ -120,9 +129,10 @@ public class Player extends Sprite implements InputProcessor{
 		else if(state.equals(State.ATTACK)) {
 			elapsedTime += delta;
 			this.setRegion(attackRegions.get(lastMove).getKeyFrame(elapsedTime, true));
-
+			drawSword();
 			if(attackRegions.get(lastMove).isAnimationFinished(elapsedTime)) {
 				state = State.WALK;
+				sword.setAlpha(0);
 			}
 		}
 		this.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
@@ -131,6 +141,41 @@ public class Player extends Sprite implements InputProcessor{
 		float dY = move.y() * SPEED * delta;
 		
 		this.translate(dX, dY);
+	}
+
+	private void drawSword() {
+		float sX, sY, deg;
+		switch(lastMove) {
+		case UP:
+			sX = this.getX() + this.getWidth() / 4 - 1;
+			sY = this.getY() + this.getHeight() * 7 / 2;
+			deg = 0;
+			break;
+		case DOWN:
+			sX = this.getX() + this.getWidth() / 2 + 4;
+			sY = this.getY() - this.getHeight() * 7 / 2 + 5;
+			deg = 180;
+			break;
+		case LEFT:
+			sX = this.getX() - this.getWidth() * 7 / 2 + 6;
+			sY = this.getY() - this.getHeight() / 4;
+			deg = 90;
+			break;
+		case RIGHT:
+			sX = this.getX() + this.getWidth() * 7 / 2 + 5;
+			sY = this.getY() - this.getHeight() / 4;
+			deg = 270;
+			break;
+		default:
+			sX = 0;
+			sY = 0;
+			deg = 0;
+			break;
+		}
+		
+		sword.setPosition(sX, sY);
+		sword.setRotation(deg);
+		sword.setAlpha(1);
 	}
 
 	@Override

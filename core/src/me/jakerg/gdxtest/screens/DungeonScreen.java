@@ -50,6 +50,7 @@ public class DungeonScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		player.draw(game.batch);
+		player.sword.draw(game.batch);
 		game.batch.end();
 		
 	}
