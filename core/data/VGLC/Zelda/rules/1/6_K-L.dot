@@ -1,7 +1,0 @@
-graph {
-ruFh [label="e, GS"]
-IjJm [label="l, GE"]
-FCbL [label="k"]
-ruFh -- FCbL
-FCbL -- IjJm
-}

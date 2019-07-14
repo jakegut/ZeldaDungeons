@@ -1,9 +1,0 @@
-graph {
-ydYw [label="s, GS"]
-tzUM [label="k, GE"]
-VLtr [label="e"]
-Dluo [label="e"]
-ydYw -- VLtr
-ydYw -- Dluo
-VLtr -- tzUM
-}

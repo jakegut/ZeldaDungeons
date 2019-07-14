@@ -1,6 +1,0 @@
-graph {
-Ebtc [label="k, GS"]
-PPBZ [label="l, GE"]
-vsCW [label="e"]
-Ebtc -- vsCW
-}

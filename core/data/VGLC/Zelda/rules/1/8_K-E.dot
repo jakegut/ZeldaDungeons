@@ -1,9 +1,0 @@
-graph {
-hIUx [label="k, GS"]
-avmo [label="e, GE"]
-QkIh [label="e"]
-GJMc [label="e"]
-hIUx -- QkIh
-hIUx -- GJMc
-GJMc -- avmo
-}

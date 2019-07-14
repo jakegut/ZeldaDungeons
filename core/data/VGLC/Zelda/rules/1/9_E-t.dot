@@ -1,9 +1,0 @@
-graph {
-FZzZ [label="e, GS"]
-beyx [label="t, GE"]
-beYj [label="e"]
-VXLK [label="e"]
-FZzZ -- beYj
-FZzZ -- VXLK
-VXLK -- beyx
-}

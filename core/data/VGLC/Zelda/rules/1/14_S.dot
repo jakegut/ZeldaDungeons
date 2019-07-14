@@ -1,5 +1,0 @@
-graph {
-LNmJ [label="sl, GS"]
-AxMZ [label="e"]
-LNmJ -- AxMZ
-}
