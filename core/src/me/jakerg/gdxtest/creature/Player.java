@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -34,13 +35,14 @@ public class Player extends Sprite implements InputProcessor{
 	private Stack<Move> inputStack;
 	private Move lastMove;
 	private State state;
-	private Body body;
+	public Body body;
 	public Animation<TextureRegion> runningAnimation;
 	public HashMap<Move, Animation<TextureRegion>> animations;
 	public HashMap<Move, Animation<TextureRegion>> attackRegions;
 	public Sprite sword;
 	private Body swordBody;
 	private float elapsedTime;
+	private Vector2 newPosition = null;
 	
 	public Player(DungeonScreen screen, World world, Point center) {
 		super(screen.atlas.findRegions("walkup").get(0));
@@ -49,7 +51,7 @@ public class Player extends Sprite implements InputProcessor{
 		this.setOriginBasedPosition(center.x, center.y);
 		
 		body = Box2DUtils.createCircBody(world, this.getX(), this.getY(), (this.getHeight() - 4) / 2);
-		body.getFixtureList().get(0).setUserData("Player");
+		body.getFixtureList().get(0).setUserData(this);
 		
 		sword = new Sprite(screen.atlas.findRegion("swordattack"));
 		sword.setOriginCenter();
@@ -111,6 +113,12 @@ public class Player extends Sprite implements InputProcessor{
 		if(!move.equals(Move.NONE)) {
 			lastMove = move;
 			elapsedTime += delta;
+		}
+		
+		if(newPosition != null) {
+			System.out.println(newPosition);
+			body.setTransform(newPosition.x, newPosition.y, body.getAngle());
+			newPosition = null;
 		}
 		
 		if(state.equals(State.WALK))
@@ -208,4 +216,9 @@ public class Player extends Sprite implements InputProcessor{
 
 	@Override
 	public boolean scrolled(int amount) { return false; }
+
+	public void setNewPosition(float x, float y) {
+		System.out.println("Setting new position");
+		newPosition  = new Vector2(x, y);
+	}
 }

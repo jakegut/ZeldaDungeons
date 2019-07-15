@@ -21,6 +21,7 @@ import me.jakerg.gdxtest.object.DungeonRoom;
 import me.jakerg.gdxtest.object.GameDungeon;
 import me.jakerg.gdxtest.object.ListenerClass;
 import me.jakerg.gdxtest.object.utils.Box2DUtils;
+import me.jakerg.gdxtest.object.utils.CameraUtils;
 import me.jakerg.rougelike.Tile;
 
 public class DungeonScreen implements Screen {
@@ -49,7 +50,8 @@ public class DungeonScreen implements Screen {
 		vp = new ExtendViewport(1280 / 4, 720 / 4, cam);
 		
 		world = new World(new Vector2(0, 0), false);
-		world.setContactListener(new ListenerClass());
+		world.setContactListener(new ListenerClass(dungeon));
+		
 		dungeon.setUpBox2d(world);
 		b2dr = new Box2DDebugRenderer();
 		atlas = new TextureAtlas(Gdx.files.internal("zelda-sheet.txt"));
@@ -64,14 +66,18 @@ public class DungeonScreen implements Screen {
 	@Override
 	public void render(float delta) {		
 		update(delta);
-		cam.update();
+		Point c = dungeon.getCurrentRoom().getCenter();
+		CameraUtils.lerpToTarget(cam, c);
+//		cam.position.set(player.getX(), player.getY(), 0);
+//		cam.update();
 		game.batch.setProjectionMatrix(cam.combined);
 		
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
-			for(DungeonRoom room : dungeon.getRooms().values())
-				room.draw(game.batch);
+//			for(DungeonRoom room : dungeon.getRooms().values())
+//				room.draw(game.batch);
+			dungeon.drawSurronding(game.batch);
 			player.draw(game.batch);
 			player.sword.draw(game.batch);
 		game.batch.end();
