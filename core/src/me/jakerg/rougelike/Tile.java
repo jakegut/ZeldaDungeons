@@ -1,6 +1,12 @@
 package me.jakerg.rougelike;
 
 import java.awt.Color;
+
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import asciiPanel.AsciiPanel;
 
 /**
@@ -10,29 +16,31 @@ import asciiPanel.AsciiPanel;
  */
 public enum Tile {
 	// Refer to Code Page 437 for the number representation of the char
-	FLOOR((char)250, AsciiPanel.yellow, 0),
-	VISITED('x', AsciiPanel.white, 101),
-	UNVISITED('x', AsciiPanel.red, 110),
-	WALL((char)219, AsciiPanel.yellow, 1),
-	CURRENT((char)219, AsciiPanel.brightYellow, -99),
-	EXIT((char)239, AsciiPanel.green, 4),
-	DOOR((char)239, AsciiPanel.green, 3),
-	BLOCK((char)177, AsciiPanel.cyan, 5), // this is the 'P' water block thing
-	LOCKED_DOOR((char)239, AsciiPanel.red, -5),
-	SOFT_LOCK_DOOR((char)239, AsciiPanel.brightBlue, -55),
-	HIDDEN((char)178, AsciiPanel.yellow, -7),
-	BOUNDS('x', AsciiPanel.brightBlack, -99),
-	KEY('k', AsciiPanel.brightYellow, 6),
-	TRIFORCE((char)30, AsciiPanel.brightYellow, 8),
-	MOVABLE_BLOCK_UP((char)219, AsciiPanel.yellow, 10),
-	MOVABLE_BLOCK_DOWN((char)219, AsciiPanel.yellow, 100),
-	MOVABLE_BLOCK_LEFT((char)219, AsciiPanel.yellow, 1000),
-	MOVABLE_BLOCK_RIGHT((char)219, AsciiPanel.yellow, 10000),
-	PUZZLE_LOCKED((char)239, Color.ORANGE, -10);
+	FLOOR((char)250, AsciiPanel.yellow, 0, "dungeon-floor"),
+	VISITED('x', AsciiPanel.white, 101, null),
+	UNVISITED('x', AsciiPanel.red, 110, null),
+	WALL((char)219, AsciiPanel.yellow, 1, "dungeon-wall"),
+	CURRENT((char)219, AsciiPanel.brightYellow, -99, null),
+	EXIT((char)239, AsciiPanel.green, 4, null),
+	DOOR((char)239, AsciiPanel.green, 3, "dungeon-unlocked"),
+	BLOCK((char)177, AsciiPanel.cyan, 5, "dungeon-water"), // this is the 'P' water block thing
+	LOCKED_DOOR((char)239, AsciiPanel.red, -5, "dungeon-locked"),
+	SOFT_LOCK_DOOR((char)239, AsciiPanel.brightBlue, -55, "dungeon-softlocked"),
+	HIDDEN((char)178, AsciiPanel.yellow, -7, "dungeon-hidden"),
+	BOUNDS('x', AsciiPanel.brightBlack, -99, null),
+	KEY('k', AsciiPanel.brightYellow, 6, "item-key"),
+	TRIFORCE((char)30, AsciiPanel.brightYellow, 8, "item-triforce"),
+	MOVABLE_BLOCK_UP((char)219, AsciiPanel.yellow, 10, "dungeon-wall"),
+	MOVABLE_BLOCK_DOWN((char)219, AsciiPanel.yellow, 100, "dungeon-wall"),
+	MOVABLE_BLOCK_LEFT((char)219, AsciiPanel.yellow, 1000, "dungeon-wall"),
+	MOVABLE_BLOCK_RIGHT((char)219, AsciiPanel.yellow, 10000, "dungeon-wall"),
+	PUZZLE_LOCKED((char)239, Color.ORANGE, -10, "dungeon-puzzle");
 	
 	private char glyph;
 	private Color color;
 	private int number;
+	private String region;
+	private TextureRegion texture;
 	
 	public char getGlyph() {
 		if(this == HIDDEN) {
@@ -52,10 +60,11 @@ public enum Tile {
 		return number;
 	}
 	
-	Tile(char glyph, Color color, int number){
+	Tile(char glyph, Color color, int number, String region){
 		this.glyph = glyph;
 		this.color = color;
 		this.number = number;
+		this.region = region;
 	}
 
 	/**
@@ -148,6 +157,23 @@ public enum Tile {
 		default:
 			return null;	
 		}
+	}
+	
+	public static void loadTextures(TextureAtlas atlas) {
+		for(Tile t : Tile.values()) {
+			if(t.region != null)
+				t.setTexture(atlas.findRegion(t.region));
+			else
+				t.setTexture(null);
+		}
+	}
+
+	public TextureRegion getTexture() {
+		return texture;
+	}
+
+	public void setTexture(TextureRegion texture) {
+		this.texture = texture;
 	}
 
 }

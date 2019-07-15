@@ -238,5 +238,15 @@ public class Dungeon {
 		}
 	}
 
+	public void flipLevelThere() {
+		String[][] temp = new String[levelThere.length][levelThere[0].length];
+		for(int y = 0; y < levelThere.length; y++) {
+			for(int x = 0; x < levelThere[y].length; x++) {
+				temp[levelThere.length - 1 -y][x] = levelThere[y][x];
+			}
+		}
+		levelThere = temp;
+	}
+
 }
 

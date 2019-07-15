@@ -1,5 +1,6 @@
 package me.jakerg.gdxtest.creature;
 
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -16,9 +17,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import me.jakerg.gdxtest.DungeonGame;
+import me.jakerg.gdxtest.object.utils.Box2DUtils;
 import me.jakerg.gdxtest.screens.DungeonScreen;
 import me.jakerg.rougelike.Move;
 
@@ -26,28 +30,32 @@ public class Player extends Sprite implements InputProcessor{
 	enum State { WALK, ATTACK };
 	
 	
-	private final int SPEED = 200;
+	private final int SPEED = 75;
 	private Stack<Move> inputStack;
 	private Move lastMove;
 	private State state;
+	private Body body;
 	public Animation<TextureRegion> runningAnimation;
 	public HashMap<Move, Animation<TextureRegion>> animations;
 	public HashMap<Move, Animation<TextureRegion>> attackRegions;
 	public Sprite sword;
+	private Body swordBody;
 	private float elapsedTime;
 	
-	public Player(DungeonScreen screen) {
-		super(screen.atlas.findRegion("walkup_1"));
-		this.setOrigin(this.getWidth() / 2, this.getHeight() / 2);
+	public Player(DungeonScreen screen, World world, Point center) {
+		super(screen.atlas.findRegions("walkup").get(0));
+		this.setOriginCenter();
 		this.setPosition(0, 0);
-		this.setScale(4);
-		this.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		this.setOriginBasedPosition(center.x, center.y);
+		
+		body = Box2DUtils.createCircBody(world, this.getX(), this.getY(), (this.getHeight() - 4) / 2);
+		body.getFixtureList().get(0).setUserData("Player");
 		
 		sword = new Sprite(screen.atlas.findRegion("swordattack"));
 		sword.setOriginCenter();
-		sword.setScale(4);
-		sword.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		sword.setAlpha(0);
+		
+		swordBody = Box2DUtils.createDynRectBody(world, sword);
 		
 		inputStack = new Stack<>();
 		inputStack.push(Move.NONE);
@@ -62,54 +70,35 @@ public class Player extends Sprite implements InputProcessor{
 	private void setUpAnimations(DungeonScreen screen) {
 		animations = new HashMap<>();
 		float s = 1/10f;
-		
-		Array<AtlasRegion> regions = new Array<>();
-		regions.add(screen.atlas.findRegion("walkup_1"));
-		regions.add(screen.atlas.findRegion("walkup_2"));
-		Animation<TextureRegion> a = new Animation<>(s, regions, PlayMode.LOOP);
+
+		Animation<TextureRegion> a = new Animation<>(s, screen.atlas.findRegions("walkup"), PlayMode.LOOP);
 		animations.put(Move.UP, a);
-		regions.clear();
 		
-		regions.add(screen.atlas.findRegion("walkdown_1"));
-		regions.add(screen.atlas.findRegion("walkdown_2"));
-		a = new Animation<>(s, regions, PlayMode.LOOP);
+		a = new Animation<>(s, screen.atlas.findRegions("walkdown"), PlayMode.LOOP);
 		animations.put(Move.DOWN, a);
-		regions.clear();
-		
-		regions.add(screen.atlas.findRegion("walkleft_1"));
-		regions.add(screen.atlas.findRegion("walkleft_2"));
-		a = new Animation<>(s, regions, PlayMode.LOOP);
+
+		a = new Animation<>(s, screen.atlas.findRegions("walkleft"), PlayMode.LOOP);
 		animations.put(Move.LEFT, a);
-		regions.clear();
-		
-		regions.add(screen.atlas.findRegion("walkright_1"));
-		regions.add(screen.atlas.findRegion("walkright_2"));
-		a = new Animation<>(s, regions, PlayMode.LOOP);
+
+		a = new Animation<>(s, screen.atlas.findRegions("walkright"), PlayMode.LOOP);
 		animations.put(Move.RIGHT, a);
-		regions.clear();
 		
 		
 		s = 1/5f;
 		attackRegions = new HashMap<>();
-		regions.add(screen.atlas.findRegion("attackup"));
-		a = new Animation<>(s, regions, PlayMode.NORMAL);
+
+		a = new Animation<>(s, screen.atlas.findRegions("attackup"), PlayMode.NORMAL);
 		attackRegions.put(Move.UP, a);
-		regions.clear();
-		
-		regions.add(screen.atlas.findRegion("attackdown"));
-		a = new Animation<>(s, regions, PlayMode.NORMAL);
+
+		a = new Animation<>(s, screen.atlas.findRegions("attackdown"), PlayMode.NORMAL);
 		attackRegions.put(Move.DOWN, a);
-		regions.clear();
-		
-		regions.add(screen.atlas.findRegion("attackleft"));
-		a = new Animation<>(s, regions, PlayMode.NORMAL);
+
+		a = new Animation<>(s, screen.atlas.findRegions("attackleft"), PlayMode.NORMAL);
 		attackRegions.put(Move.LEFT, a);
-		regions.clear();
-		
-		regions.add(screen.atlas.findRegion("attackright"));
-		a = new Animation<>(s, regions, PlayMode.NORMAL);
+
+		a = new Animation<>(s, screen.atlas.findRegions("attackright"), PlayMode.NORMAL);
 		attackRegions.put(Move.RIGHT, a);
-		regions.clear();
+
 	}
 
 	public void update(float delta) {
@@ -133,37 +122,38 @@ public class Player extends Sprite implements InputProcessor{
 			if(attackRegions.get(lastMove).isAnimationFinished(elapsedTime)) {
 				state = State.WALK;
 				sword.setAlpha(0);
+				swordBody.setActive(false);
 			}
 		}
-		this.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 //		this.setScale(1, 1);
-		float dX = move.x() * SPEED * delta;
-		float dY = move.y() * SPEED * delta;
+		float dX = move.x() * SPEED / Box2DUtils.PPM;
+		float dY = move.y() * SPEED / Box2DUtils.PPM;
 		
-		this.translate(dX, dY);
+		body.setLinearVelocity(dX, dY);
+		Box2DUtils.setSpritePosition(this, body);
 	}
 
 	private void drawSword() {
 		float sX, sY, deg;
 		switch(lastMove) {
 		case UP:
-			sX = this.getX() + this.getWidth() / 4 - 1;
-			sY = this.getY() + this.getHeight() * 7 / 2;
+			sX = this.getX() + this.getWidth() / 3 + sword.getWidth() / 2;
+			sY = this.getY() + this.getHeight() + sword.getHeight() / 2;
 			deg = 0;
 			break;
 		case DOWN:
-			sX = this.getX() + this.getWidth() / 2 + 4;
-			sY = this.getY() - this.getHeight() * 7 / 2 + 5;
+			sX = this.getX() + this.getWidth() / 2 + sword.getWidth() / 2;
+			sY = this.getY() - this.getHeight() + 5 + sword.getHeight() / 2;
 			deg = 180;
 			break;
 		case LEFT:
-			sX = this.getX() - this.getWidth() * 7 / 2 + 6;
-			sY = this.getY() - this.getHeight() / 4;
+			sX = this.getX() - this.getWidth() / 2 + 2;
+			sY = this.getY() + this.getHeight() / 2;
 			deg = 90;
 			break;
 		case RIGHT:
-			sX = this.getX() + this.getWidth() * 7 / 2 + 5;
-			sY = this.getY() - this.getHeight() / 4;
+			sX = this.getX() + this.getWidth() * 3 / 2 - 2;
+			sY = this.getY() + this.getHeight() / 2;
 			deg = 270;
 			break;
 		default:
@@ -173,8 +163,11 @@ public class Player extends Sprite implements InputProcessor{
 			break;
 		}
 		
-		sword.setPosition(sX, sY);
-		sword.setRotation(deg);
+		deg = (float) (deg * (Math.PI / 180));
+		swordBody.setActive(true);
+		swordBody.setTransform(sX / 16, sY / 16, deg);
+		Box2DUtils.setSpritePosition(sword, swordBody);
+		
 		sword.setAlpha(1);
 	}
 

@@ -1,7 +1,7 @@
-zeldasheet.png
-size: 196, 16
+zelda-sheet.png
+size: 357, 16
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 arrowprojectile
   rotate: false
@@ -9,102 +9,179 @@ arrowprojectile
   size: 5, 16
   orig: 5, 16
   offset: 0, 0
-  index: 1
+  index: -1
 attackdown
   rotate: false
   xy: 5, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
-  index: 1
+  index: -1
 attackleft
   rotate: false
   xy: 20, 0
-  size: 15, 16
-  orig: 15, 16
-  offset: 0, 0
-  index: 1
-attackright
-  rotate: false
-  xy: 35, 0
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
-  index: 1
+  index: -1
+attackright
+  rotate: false
+  xy: 36, 0
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
 attackup
   rotate: false
-  xy: 51, 0
+  xy: 52, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
-  index: 1
+  index: -1
+dungeon-floor
+  rotate: false
+  xy: 67, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-hidden
+  rotate: false
+  xy: 83, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-locked
+  rotate: false
+  xy: 99, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-puzzle
+  rotate: false
+  xy: 115, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-softlocked
+  rotate: false
+  xy: 131, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-unlocked
+  rotate: false
+  xy: 147, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-wall
+  rotate: false
+  xy: 163, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+dungeon-water
+  rotate: false
+  xy: 179, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+item-key
+  rotate: false
+  xy: 195, 0
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
+item-ladder
+  rotate: false
+  xy: 203, 0
+  size: 14, 16
+  orig: 14, 16
+  offset: 0, 0
+  index: -1
+item-triforce
+  rotate: false
+  xy: 217, 0
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
 swordattack
   rotate: false
-  xy: 66, 0
+  xy: 227, 0
   size: 3, 11
   orig: 3, 11
   offset: 0, 0
-  index: 1
+  index: -1
 swordprojectile
   rotate: false
-  xy: 69, 0
+  xy: 230, 0
   size: 7, 16
   orig: 7, 16
   offset: 0, 0
-  index: 1
-walkdown_1
+  index: -1
+walkdown
   rotate: false
-  xy: 76, 0
+  xy: 237, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: 1
-walkdown_2
+walkdown
   rotate: false
-  xy: 91, 0
+  xy: 252, 0
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 2
+walkleft
+  rotate: false
+  xy: 267, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: 1
-walkleft_1
+walkleft
   rotate: false
-  xy: 106, 0
+  xy: 282, 0
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 2
+walkright
+  rotate: false
+  xy: 297, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: 1
-walkleft_2
+walkright
   rotate: false
-  xy: 121, 0
+  xy: 312, 0
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 2
+walkup
+  rotate: false
+  xy: 327, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: 1
-walkright_1
+walkup
   rotate: false
-  xy: 136, 0
+  xy: 342, 0
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
-  index: 1
-walkright_2
-  rotate: false
-  xy: 151, 0
-  size: 15, 16
-  orig: 15, 16
-  offset: 0, 0
-  index: 1
-walkup_1
-  rotate: false
-  xy: 166, 0
-  size: 15, 16
-  orig: 15, 16
-  offset: 0, 0
-  index: 1
-walkup_2
-  rotate: false
-  xy: 181, 0
-  size: 15, 16
-  orig: 15, 16
-  offset: 0, 0
-  index: 1
+  index: 2
