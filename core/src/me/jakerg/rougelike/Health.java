@@ -1,17 +1,17 @@
 package me.jakerg.rougelike;
 
-import java.awt.Color;
+import java.awt.*;
 
-public class Health extends Item{
+public class Health extends Item {
 
-	public Health(World world, char glpyh, Color color, int x, int y) {
-		super(world, glpyh, color, x, y);
-		this.pickupable = true;
-	}
+    public Health(World world, char glpyh, Color color, int x, int y) {
+        super(world, glpyh, color, x, y);
+        this.pickupable = true;
+    }
 
-	@Override
-	public void onPickup(Creature creature) {
-		if(creature.isPlayer())
-			creature.addHP();
-	}
+    @Override
+    public void onPickup(Creature creature) {
+        if (creature.isPlayer())
+            creature.addHP();
+    }
 }
